@@ -1,0 +1,11 @@
+  
+{
+    "domain": "ha_script_engine",
+    "name": "HA Script Engine",
+    "documentation": "https://github.com/jkCXf9X4/ha_script_engine",
+    "version": "0.0.1",
+    "requirements": [],
+    "dependencies": [],
+    "codeowners": ["jkCXf9X4"],
+    "iot_class": "local_polling"
+  }
