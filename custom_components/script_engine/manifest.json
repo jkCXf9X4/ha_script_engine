@@ -1,7 +1,7 @@
   
 {
-    "domain": "ha_script_engine",
-    "name": "HA Script Engine",
+    "domain": "script_engine",
+    "name": "HomeAssistent Script Engine",
     "documentation": "https://github.com/jkCXf9X4/ha_script_engine",
     "version": "0.0.1",
     "requirements": [],
