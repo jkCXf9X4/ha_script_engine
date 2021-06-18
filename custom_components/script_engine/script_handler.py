@@ -3,6 +3,7 @@ import fnmatch
 import logging
 import runpy
 import inspect
+import re
 
 from .engine import Engine
 
@@ -49,9 +50,9 @@ class Script_handler:
 
         _ = [ instantiate_class(i) for i in self.scripts]
            
-    def extract_script_functions(self, pattern=None):
+    def extract_script_functions(self, pattern):
         def extract_function(script: Script_info):
-            attrs = [getattr(script._class, name) for name in dir(script._class) if name[0:1] != "_"]
+            attrs = [getattr(script._class, name) for name in dir(script._class) if name[0:1] != "_" and re.match(pattern, name) != None]
             script.function_objects = [attr for attr in attrs if inspect.ismethod(attr)]
 
         _ = [ extract_function(i) for i in self.scripts]
