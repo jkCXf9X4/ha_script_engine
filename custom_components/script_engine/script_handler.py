@@ -7,6 +7,8 @@ import re
 
 from .engine import Engine
 
+from .misc import ListHelp
+
 class Script_info:
     def __init__(self):
         self.path = None
@@ -65,12 +67,6 @@ class Script_handler:
 
 ####
 # Old stuff 
-
-    # @staticmethod
-    # def get_current_path():
-    #     full_path = os.path.realpath(__file__)
-    #     path, filename = os.path.split(full_path)
-    #     return path
 
     # def import_scripts(self):
     #     import importlib

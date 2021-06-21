@@ -1,8 +1,7 @@
 """Home assistant script engine"""
 
-"""Home assistant script engine"""
-
 import logging
+import sys
 
 from .script_handler import Script_handler
 
@@ -24,6 +23,8 @@ SCRIPT_FOLDER = "/config/script_engine/"
 async def async_setup(hass: HomeAssistant, config):
     """Set up platform."""
     _LOGGER.info("Initiating ha script engine module")
+
+    sys.path.append(SCRIPT_FOLDER)
 
     script_handler = Script_handler(SCRIPT_FOLDER)
     script_handler.find_files( pattern=FILE_NAME_PATTERN)
