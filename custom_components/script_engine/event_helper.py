@@ -24,9 +24,7 @@ class State:
     operate = 2
     destructor = 3
 
-
-
-class Event_helper:
+class Hass_helper:
 
     def __init__(self, hass: HomeAssistant) -> None:
         self.hass = hass
