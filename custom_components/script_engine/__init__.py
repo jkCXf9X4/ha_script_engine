@@ -4,19 +4,20 @@ import logging
 import sys
 
 from .script_handler import Script_handler
-from .misc import FileHandler
+
+from .event_distributor import EventDistributor
+
+from .const import (
+    SCRIPT_FOLDER, 
+    CUSTOM_COMPONENTS_FOLDER, 
+    FILE_NAME_PATTERN, 
+    FUNCTION_NAME_PATTERN, 
+    DOMAIN,
+)
 
 from homeassistant.core import (
     HomeAssistant,
 )
-
-DOMAIN = "script_engine"
-
-FILE_NAME_PATTERN = 'script_*.py'
-FUNCTION_NAME_PATTERN = 'script_*'
-
-SCRIPT_FOLDER = "/config/script_engine/"
-CUSTOM_COMPONENTS_FOLDER = FileHandler.get_folder_from__file__(__file__)
 
 async def async_setup(hass: HomeAssistant, config):
     """Set up platform."""
@@ -25,13 +26,15 @@ async def async_setup(hass: HomeAssistant, config):
     logger.info("Initiating ha script engine module")
 
     sys.path.append(SCRIPT_FOLDER)
-    sys.path.append(CUSTOM_COMPONENTS_FOLDER)
+    # sys.path.append(CUSTOM_COMPONENTS_FOLDER)
+
+    _ = EventDistributor(hass=hass, log=logger)
 
     script_handler = Script_handler(SCRIPT_FOLDER, logger)
     script_handler.find_files(pattern=FILE_NAME_PATTERN)
     script_handler.extract_script_classes()
-    script_handler.instantiate_script_classes(hass=hass, logger=logger , domain=DOMAIN)
+    script_handler.instantiate_script_classes(hass=hass, logger=logger, domain=DOMAIN)
     script_handler.extract_script_functions(pattern=FUNCTION_NAME_PATTERN)
-    script_handler.instantiate_script_functions()
+    script_handler.instantiate_script_functions(is_setup=True)
 
     return True
