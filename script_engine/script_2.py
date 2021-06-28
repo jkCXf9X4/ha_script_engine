@@ -13,9 +13,10 @@ class script_2(Engine):
 
         self.log.info(self.t.get_stuff())
 
-    def script_turn_on_ligt(self, *args, **kwargs):
-        if kwargs.get('is_setup', False):
-            return
+    def script_turn_on_light_2(self, *args, **kwargs):
+        if kwargs.get('setup', False):
+            self.log.info("in setup turn on ligt hase_2")
+            return True
 
         self.log.info("turn on ligt hase_2")
 

@@ -1,6 +1,9 @@
 
 import logging
 
+from .misc import Singleton
+
+
 from homeassistant.const import (
     ATTR_NOW,
     EVENT_CORE_CONFIG_UPDATE,
@@ -19,21 +22,11 @@ from homeassistant.core import (
     split_entity_id,
 )
 
-class Singleton(type):
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        # else:
-            # cls._instances[cls].__init__(*args, **kwargs)
-        return cls._instances[cls]
-
 class EventDistributor(metaclass=Singleton):
 
-    def __init__(self, hass: HomeAssistant, log) -> None:
+    def __init__(self, hass: HomeAssistant) -> None:
         self.hass = hass
-        self.log = log
+        self.log = logging.getLogger(__name__)
         self.id_table = {}
 
         self._register_event_tracker()

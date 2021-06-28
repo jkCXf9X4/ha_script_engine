@@ -10,7 +10,7 @@ from .misc import ListHelp
 
 # importing to globals for access in scripts
 from .engine import Engine
-from .event import AtStateChange
+from .event import *
 
 
 class Script_info:
@@ -25,13 +25,12 @@ class Script_info:
         self.non_script_functions_object = None
         self.non_script_functions = None
 
-
 class Script_handler:
 
-    def __init__(self, path, logger) -> None:
+    def __init__(self, path) -> None:
         self.path = path
         self.scripts = []
-        self.logger = logger
+        self.logger = logging.getLogger(__name__)
 
     def find_files(self, pattern) -> None:
         def init_script(path, file):
@@ -67,14 +66,16 @@ class Script_handler:
             attrs = [getattr(script._class, name) for name in dir(script._class) if name[0:1] != "_"]
             functions = [attr for attr in attrs if inspect.ismethod(attr)]
             script.script_function_objects, script.non_script_functions_object = ListHelp.split_list(functions, is_script_function)
-            self.logger.debug(f"Script_functions {script.script_function_objects}")
-            # self.logger.debug(f"Non Script_functions {script.non_script_functions_object}")
+
+            self.logger.debug(f"Extracted: {script.class_object.__name__}, {' '.join([i.__name__ for i in script.script_function_objects])}")
 
         _ = [extract_function(i) for i in self.scripts]
 
     def instantiate_script_functions(self, *args, **kwargs):
         def instantiate_functions(script: Script_info):
             script.functions = [func(*args, **kwargs) for func in script.script_function_objects]
+
+            self.logger.debug(f"Setup status: {script.functions}")
 
         _ = [instantiate_functions(i) for i in self.scripts]
 

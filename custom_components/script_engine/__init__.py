@@ -28,13 +28,13 @@ async def async_setup(hass: HomeAssistant, config):
     sys.path.append(SCRIPT_FOLDER)
     # sys.path.append(CUSTOM_COMPONENTS_FOLDER)
 
-    _ = EventDistributor(hass=hass, log=logger)
+    _ = EventDistributor(hass=hass)
 
-    script_handler = Script_handler(SCRIPT_FOLDER, logger)
+    script_handler = Script_handler(SCRIPT_FOLDER)
     script_handler.find_files(pattern=FILE_NAME_PATTERN)
     script_handler.extract_script_classes()
-    script_handler.instantiate_script_classes(hass=hass, logger=logger, domain=DOMAIN)
+    script_handler.instantiate_script_classes(hass=hass, domain=DOMAIN)
     script_handler.extract_script_functions(pattern=FUNCTION_NAME_PATTERN)
-    script_handler.instantiate_script_functions(is_setup=True)
+    script_handler.instantiate_script_functions(hass=hass, setup=True)
 
     return True
