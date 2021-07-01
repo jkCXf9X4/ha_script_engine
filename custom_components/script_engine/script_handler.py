@@ -3,14 +3,15 @@ import os
 import fnmatch
 import logging
 import runpy
+import importlib
 import inspect
 import re
 
 from .misc import ListHelp
 
 # importing to globals for access in scripts
-from .engine import Engine
-from .event import *
+# from .engine import Engine
+# from .decorator import *
 
 
 class Script_info:
@@ -46,8 +47,9 @@ class Script_handler:
 
     def extract_script_classes(self):
         def extract_class(script: Script_info):
-            script_globals = runpy.run_path(path_name=script.path, init_globals=globals())
-            script.class_object = script_globals[script.module_name]
+            module = importlib.import_module(script.module_name)
+            members = {i[0]: i[1] for i in inspect.getmembers(module, inspect.isclass)}
+            script.class_object = members[script.module_name]
 
         _ = [extract_class(i) for i in self.scripts]
 
@@ -67,28 +69,16 @@ class Script_handler:
             functions = [attr for attr in attrs if inspect.ismethod(attr)]
             script.script_function_objects, script.non_script_functions_object = ListHelp.split_list(functions, is_script_function)
 
-            self.logger.debug(f"Extracted: {script.class_object.__name__}, {' '.join([i.__name__ for i in script.script_function_objects])}")
+            self.logger.info(f"Class: {script.class_object.__name__}")
+            self.logger.info(f"Extracted functions: {' '.join([i.__name__ for i in script.script_function_objects])}")
+            self.logger.debug(f"Not Extracted: {' '.join([i.__name__ for i in script.non_script_functions_object])}")
 
         _ = [extract_function(i) for i in self.scripts]
 
     def instantiate_script_functions(self, *args, **kwargs):
         def instantiate_functions(script: Script_info):
-            script.functions = [func(*args, **kwargs) for func in script.script_function_objects]
+            script.function_results = [func(*args, **kwargs) for func in script.script_function_objects]
 
-            self.logger.debug(f"Setup status: {script.functions}")
+            self.logger.debug(f"Instantiate status: {script.function_results}")
 
         _ = [instantiate_functions(i) for i in self.scripts]
-
-####
-# Old stuff
-
-# def import_scripts(self):
-#     import importlib
-#     for script in self.scripts:
-#         importlib.import_module(f"{script.module_name}")
-
-
-# def create_module_import_index(scripts, path):
-#     with open(os.path.join(path, 'index.py'), 'w') as writer:
-#         for module in scripts:
-#             writer.write(f"from {module} import *\n")
