@@ -27,14 +27,16 @@ class IfState(Decorator):
                 if callable(required):
                     required = required()
 
-                t = type(required)
-                actual = t(actual)
+                if actual != None:
+                    # self.log.debug(f"Type actual {type(actual)}, required {type(required)}")
+                    t = type(required)
+                    actual = t(actual)
 
-                if required == "*" and actual != None:
+                if str(required) == "*":
                     return_value = return_value and True
-                elif required == "**":
+                elif str(required) == "**" and actual != None:
                     return_value = return_value and True
-                elif actual != None and op(actual, required):
+                elif op(actual, required):
                     return_value = return_value and True
                 else:
                     return_value = False
@@ -50,10 +52,6 @@ class IfState(Decorator):
         return check_conditions(conditions)
 
     def setup(self, *args, **kwargs):
-
-        # state = self.hass.states.get(self.id)
-        # self.valid = self.evaluate_state(new_state=state)
-
         self.event_distributor.register_callback(self.id, callback=self.callback)
         return super().setup(*args, **kwargs)
 
@@ -63,7 +61,7 @@ class IfState(Decorator):
 
         self.event: EventData = kwargs.get("event", None)
 
-        if self.event != None:  # if new event, update
+        if self.event != None:
             kwargs.pop("event", None)  # consume event
 
             old_valid = self.valid
@@ -72,42 +70,12 @@ class IfState(Decorator):
             self.log.debug(F"Decorator: {self.id} new event")
             self.log.debug(F"New: {self.event.new_state}, Old: {self.event.old_state}, self.valid: {self.valid}")
 
-            if self.is_valid() and self.valid != old_valid:
+            if self.are_decorators_valid() and self.valid != old_valid:
                 # self.log.debug(F"Decorator: {self.id} passing to next function")
                 return_value = super().main(*args, **kwargs)
         else:
-            if self.is_valid():
+            if self.are_decorators_valid():
                 # self.log.debug(F"Decorator: {self.id}, passthru")
                 return_value = super().main(*args, **kwargs)
 
         return return_value
-
-
-# class AtState(Decorator):
-#     def __init__(self, id, state="*", bigger_than="*", smaller_than="*"):
-#         super().__init__(id)
-
-#         self.reqired_bigger_than = bigger_than
-#         self.reqired_smaller_than = smaller_than
-#         self.required_state = state
-
-#     def evaluate_state(self, new_state):
-
-#         conditions = [(new_state, operator.eq, self.required_state),
-#                       (new_state, operator.ge, self.reqired_bigger_than),
-#                       (new_state, operator.le, self.reqired_smaller_than)]
-
-#         return self.check_conditions(conditions)
-
-#     def main(self, *args, **kwargs):
-
-#         return_value = False
-
-#         self.state = self.hass.states.get(self.id)
-#         self.valid = self.evaluate_state(new_state=self.state)
-
-#         if self.is_valid():
-#             return_value = self.wrapped_func(*args, **kwargs)
-
-#         return return_value
-

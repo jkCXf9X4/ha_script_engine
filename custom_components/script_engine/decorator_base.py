@@ -17,11 +17,11 @@ class Decorator:
     def __str__(self):
         return f"{self.id}"
 
-    def is_valid(self):
+    def are_decorators_valid(self):
         if self.previous_decorator is None:
             return self.valid
         else:
-            return self.valid and self.previous_decorator.is_valid()
+            return self.valid and self.previous_decorator.are_decorators_valid()
 
     def __call__(self, func):
         self.wrapped_func = func

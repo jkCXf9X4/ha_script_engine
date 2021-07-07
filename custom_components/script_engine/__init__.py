@@ -3,20 +3,18 @@
 import logging
 import sys
 
-from .script_handler import Script_handler
-
-from .event_distributor import EventDistributor
-
-from .const import (
-    SCRIPT_FOLDER,
-    CUSTOM_COMPONENTS_FOLDER,
-    FILE_NAME_PATTERN,
-    FUNCTION_NAME_PATTERN,
-    DOMAIN,
-)
-
 async def async_setup(hass, config):
     """Set up platform."""
+    from custom_components.script_engine.script_handler import ScriptHandler
+    from custom_components.script_engine.event_distributor import EventDistributor
+
+    from .const import (
+        SCRIPT_FOLDER,
+        CLASS_NAME_PATTERN,
+        FILE_NAME_PATTERN,
+        FUNCTION_NAME_PATTERN,
+        DOMAIN,
+    )
 
     logger = logging.getLogger(__name__)
     logger.info("Initiating ha script engine module")
@@ -25,11 +23,11 @@ async def async_setup(hass, config):
 
     event_distributor = EventDistributor(hass=hass)
 
-    script_handler = Script_handler(SCRIPT_FOLDER)
+    script_handler = ScriptHandler(SCRIPT_FOLDER)
 
     def setup():
         script_handler.find_files(pattern=FILE_NAME_PATTERN)
-        script_handler.extract_script_classes()
+        script_handler.extract_script_classes(pattern=CLASS_NAME_PATTERN)
         script_handler.instantiate_script_classes(hass=hass, domain=DOMAIN)
         script_handler.extract_script_functions(pattern=FUNCTION_NAME_PATTERN)
         script_handler.instantiate_script_functions(hass=hass, setup=True)

@@ -7,9 +7,11 @@ class Engine:
         self.log = logging.getLogger(__name__)  # kwargs.get('logger', logging.getLogger(__name__))
         self.domain = kwargs.get('domain', "unknown_domain")
 
-        # self.log.info("Engine init")
-
     def set_state(self, entity_id, new_state):
+        self.log.info(f"set state, {entity_id}, {new_state}")
+        self.hass.states.async_set(entity_id, new_state)
+
+    def set_local_state(self, entity_id, new_state):
         self.log.info(f"set state, {entity_id}, {new_state}")
         self.hass.states.async_set(f"{self.domain}.{entity_id}", new_state)
 

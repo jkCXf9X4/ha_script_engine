@@ -6,6 +6,7 @@
         "--max-line-length=200",
         "--ignore=E402,F841,F401,E302,E305,W391,E711",
     ],
+    "python.testing.cwd": "${workspaceFolder}",
     "python.testing.unittestArgs": [
         "-v",
         "-s",

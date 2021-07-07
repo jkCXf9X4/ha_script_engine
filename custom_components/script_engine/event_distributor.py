@@ -4,21 +4,21 @@ import logging
 from .misc import Singleton
 
 from homeassistant.const import (
-    ATTR_NOW,
-    EVENT_CORE_CONFIG_UPDATE,
+    # ATTR_NOW,
+    # EVENT_CORE_CONFIG_UPDATE,
     EVENT_STATE_CHANGED,
-    EVENT_TIME_CHANGED,
-    MATCH_ALL,
-    SUN_EVENT_SUNRISE,
-    SUN_EVENT_SUNSET,
+    # EVENT_TIME_CHANGED,
+    # MATCH_ALL,
+    # SUN_EVENT_SUNRISE,
+    # SUN_EVENT_SUNSET,
 )
 from homeassistant.core import (
-    CALLBACK_TYPE,
+    # CALLBACK_TYPE,
     Event,
     HomeAssistant,
-    State,
+    # State,
     callback,
-    split_entity_id,
+    # split_entity_id,
 )
 
 class EventData:

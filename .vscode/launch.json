@@ -15,6 +15,15 @@
                 "PYTHONPATH": "${cwd}"
             }
 
+        },
+        {
+            "name": "Debug Config",
+            "type": "python",
+            "request": "test",
+            "cwd":  "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            }
         }
     ]
 }
