@@ -71,8 +71,7 @@ class ScriptHandler:
             functions = [attr for attr in attrs if inspect.ismethod(attr)]
             scrip_class.script_function_objects, scrip_class.non_script_functions_object = ListHelp.split_list(functions, is_script_function)
 
-            self.logger.debug(f"Class: {scrip_class.script_class_object.__name__}")
-            self.logger.debug(f"Extracted functions: {' '.join([i.__name__ for i in scrip_class.script_function_objects])}")
+            self.logger.info(f"\nClass: {scrip_class.script_class_object.__name__} \nExtracted functions: {' '.join([i.__name__ for i in scrip_class.script_function_objects])}")
             self.logger.debug(f"Not Extracted: {' '.join([i.__name__ for i in scrip_class.non_script_functions_object])}")
 
         _ = [[extract_functions(j) for j in i.class_info_objects] for i in self.scripts]

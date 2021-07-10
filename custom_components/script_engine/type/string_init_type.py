@@ -9,32 +9,34 @@ class StringInitType:
     def __hash__(self):
         return hash(self.item)
 
-    def check_type(self, other):
+    def __eq__(self, other):
         if not isinstance(other, StringInitType):
             return NotImplemented
-
-    def __eq__(self, other):
-        self.check_type(other=other)
         return self.item == other.item
 
     def __ne__(self, other):
-        self.check_type(other=other)
+        if not isinstance(other, StringInitType):
+            return NotImplemented
         return self.item != other.item
 
     def __lt__(self, other):
-        self.check_type(other=other)
+        if not isinstance(other, StringInitType):
+            return NotImplemented
         return self.item < other.item
 
     def __le__(self, other):
-        self.check_type(other=other)
+        if not isinstance(other, StringInitType):
+            return NotImplemented
         return self.item <= other.item
 
     def __gt__(self, other):
-        self.check_type(other=other)
+        if not isinstance(other, StringInitType):
+            return NotImplemented
         return self.item > other.item
 
     def __ge__(self, other):
-        self.check_type(other=other)
+        if not isinstance(other, StringInitType):
+            return NotImplemented
         return self.item >= other.item
 
     def __repr__(self) -> str:
@@ -44,9 +46,11 @@ class StringInitType:
         return self.item.__str__()
 
     def __add__(self, other):
-        self.check_type(other=other)
+        if not isinstance(other, StringInitType):
+            return NotImplemented
         return self.item + other.item
 
     def __sub__(self, other):
-        self.check_type(other=other)
+        if not isinstance(other, StringInitType):
+            return NotImplemented
         return self.item - other.item

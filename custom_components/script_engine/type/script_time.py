@@ -35,11 +35,13 @@ class ScriptTime(StringInitType):
         return self.to_time().strftime("%H:%M")
 
     def __add__(self, other):
-        self.check_type(other)
+        if not isinstance(other, StringInitType):
+            return NotImplemented
         i = self.to_timedelta() + other.to_timedelta()
         return ScriptTime.from_timedelta(i)
 
     def __sub__(self, other):
-        self.check_type(other)
+        if not isinstance(other, StringInitType):
+            return NotImplemented
         i = self.to_timedelta() - other.to_timedelta()
         return ScriptTime.from_timedelta(i)
