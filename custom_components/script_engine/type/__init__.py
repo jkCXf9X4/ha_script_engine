@@ -1,0 +1,1 @@
+""" Custom types used to get the conversion correct from HA in state decorator """

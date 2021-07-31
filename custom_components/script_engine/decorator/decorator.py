@@ -1,93 +1,95 @@
 
-from custom_components.script_engine.local_event_wrapper import LocalEventWrapper
 import logging
-
+from abc import ABC
+import uuid
 from typing import List
 
-import uuid
+class Decorator(ABC):
+    """
+    Abstract base class that handles the decorator chain of execution
 
-class Decorator:
+    Handles setup, default use and teardown of the decorator
 
-    def __init__(self, id, **kwargs):
-        self.id = id
+    Info/use case is mainly passed down thru the chain using custom kwargs depending
+    """
+
+    def __init__(self, *args, **kwargs):
+
         self.uuid = uuid.uuid4()
         self.name = type(self).__name__
-        self.decorator_chain: List[Decorator] = None
+        self.decorator_type = "Dacorator"
 
+        self.decorators: List[Decorator] = None
+
+        self.debug_from_init = "debug" in kwargs.keys()
         self.debug = kwargs.get("debug", False)
 
         self.hass = None
         self.call_class_self = None
 
-        self.valid = False
-        self.previous_valid = None
-
         self.log = logging.getLogger(__name__)
 
-    def __str__(self):
-        return f"{self.name}:{self.id}"
+    def __str__(self) -> str:
+        return f"{self.name}:{self.uuid}"
 
     def __repr__(self) -> str:
-        return f"{self.name}:{self.id}:{self.uuid}"
-
-    def is_valid():
-        raise NotImplementedError
-
-    def is_chain_valid(self):
-        for i in self.decorator_chain:
-            if not i.is_valid():
-                return False
-        return True
+        return f"{self.name}:{self.uuid}"
 
     def __call__(self, func):
+        """
+        
+        """
         self.wrapped_func = func
 
-        def wrapper(*args, **kwargs):  # strange workaround, unable to change name on self.callback
-            return self.callback(*args, **kwargs)
+        def wrapper(*args, **kwargs):
+            if kwargs.get('setup', False):
+                return self.setup(*args, **kwargs)
+            elif kwargs.get('teardown', False):
+                return self.teardown(*args, **kwargs)
+            else:
+                return self.default(*args, **kwargs)
 
         wrapper.__name__ = func.__name__
+        wrapper.__doc__ = func.__doc__
         return wrapper
 
-    def callback(self, *args, **kwargs):
-        if kwargs.get('setup', False):
-            return self.setup(*args, **kwargs)
-
-        elif kwargs.get('teardown', False):
-            return self.teardown(*args, **kwargs)
-
-        else:
-            return self.default(*args, **kwargs)
+    def get_setup_output(self, *args, **kwargs):
+        """
+        
+        """
+        kwargs["decorators"] = self.decorators
+        return args, kwargs
 
     def setup(self, *args, **kwargs):
+        self.debug = kwargs.get("debug", False) if not self.debug_from_init else self.debug
+
         self.hass = kwargs.get("hass", None)
-
-        self.decorator_chain = kwargs.get("decorator_chain", [])
-        self.decorator_chain.append(self)
-        kwargs["decorator_chain"] = self.decorator_chain
-
         self.call_class_self = args[0]
-        return self.wrapped_func(*args, **kwargs)
+
+        self.decorators = kwargs.get("decorators", [])
+        self.decorators.append(self)
+
+        if "decorator" in self.wrapped_func.__module__:
+            args, kwargs = self.get_setup_output(*args, **kwargs)
+            return self.call_wrapped_function(*args, **kwargs)
+
+    def get_default_output(self, *args, **kwargs):
+        return args, kwargs
 
     def default(self, *args, **kwargs):
-        self.valid = self.is_valid()
-        if self.debug:
-            self.log.debug(f" args{args}, kwargs {kwargs}")
+        args, kwargs = self.get_default_output(*args, **kwargs)
+        return self.call_wrapped_function(*args, **kwargs)
 
-        if self.valid == self.previous_valid:
-            return  # dont trigger on new events that give the same result
-        self.previous_valid = self.valid
-
-        if self.is_chain_valid():
-            kwargs["decorators"] = self.decorator_chain
-            self.decorator_chain[-1].call_wrapped_function(*args, **kwargs)
+    def get_teardown_output(self, *args, **kwargs):
+        return args, kwargs
 
     def teardown(self, *args, **kwargs):
-        return self.wrapped_func(*args, **kwargs)
+        args, kwargs = self.get_teardown_output(*args, **kwargs)
+        return self.call_wrapped_function(*args, **kwargs)
 
     def call_wrapped_function(self, *args, **kwargs):
-        if self.debug:
-            self.log.debug(f"call wrapped function args{args}, kwargs {kwargs}")
-        return self.wrapped_func(self.call_class_self, *args, **kwargs)
+        not self.debug or self.log.debug(f"Call wrapped function {self.wrapped_func.__module__}\n - args: {args}, kwargs: {kwargs}")
+        return True if self.wrapped_func(self.call_class_self, *args, **kwargs) is not False else False
 
     def __eq__(self, other: object):
         if not isinstance(object, Decorator):

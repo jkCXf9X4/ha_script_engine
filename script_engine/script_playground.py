@@ -1,30 +1,32 @@
 
-import datetime
+from custom_components.script_engine.engine import Engine, DOMAIN
+from custom_components.script_engine.decorator import ToState, Duality, Debug, Arguents, IfState
+from custom_components.script_engine.hass.extension import ServiceExt, StateExt, LightExt
+from custom_components.script_engine.hass.wrapper import LightWrap
 
-from custom_components.script_engine.decorator.if_state import IfState
-from custom_components.script_engine.engine import Engine
-from custom_components.script_engine.type.script_time import ScriptTime
+from .script_time import ScriptTime
 
 class _Script_Playground(Engine):
+
+    id = f"{DOMAIN}.playground_id"
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-
-    @IfState(id="input_boolean.is_home", state="off", debug=True)
-    @IfState(id="group.family", state="home", debug=True)
-    @IfState(id="sensor.time", bigger_than=ScriptTime("03:00"), debug=True)
+    @ToState(id="lock.main", state="unlocked")
+    @ToState(id="sensor.time", bigger_than=ScriptTime("16:00"))
+    @IfState(id="group.family", state="home")
     def _script_play_1(self, *args, **kwargs):
-        if kwargs.get('setup', False):
-            # self.log.info("in setup script_1:scrpt_1")
-            return True
 
-        self.log.info("Play_1 triggered")
+        StateExt.set_state(self.hass, self.id, "State_1")
 
-    @IfState(id="group.family", state="not_home")
+    @Debug()  # Observ brackets
+    @Duality()  # Observ brackets
+    @ToState(id="input_boolean.is_home", state="on", debug=False)
     def _script_play_2(self, *args, **kwargs):
-        if kwargs.get('setup', False):
-            # self.log.info("in setup script_1:scrpt_1")
-            return True
 
-        self.log.info("Play:2 triggered")
+        condition = kwargs.get("condition")
+        if condition:
+            LightExt.turn_on_light(self.hass, id="light.hunden_on_off", data={})
+        else:
+            LightExt.turn_off_light(self.hass, id="light.hunden_on_off", data={})

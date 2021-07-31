@@ -1,11 +1,11 @@
   
 {
     "domain": "script_engine",
-    "name": "HomeAssistent Script Engine",
+    "name": "Script Engine",
     "documentation": "https://github.com/jkCXf9X4/ha_script_engine",
-    "version": "0.0.1",
+    "version": "0.4.0",
     "requirements": [],
     "dependencies": [],
     "codeowners": ["jkCXf9X4"],
-    "iot_class": "local_polling"
+    "iot_class": ["local_polling", "local_push"]
   }

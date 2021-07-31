@@ -4,9 +4,8 @@ import logging
 import sys
 
 async def async_setup(hass, config):
-    """Set up platform."""
-    from custom_components.script_engine.script_handler import ScriptHandler
-    from custom_components.script_engine.event_distributor import EventDistributor
+    from custom_components.script_engine.script_handler.script_handler import ScriptHandler
+    from custom_components.script_engine.event.event_distributor import EventDistributor
 
     from .const import (
         SCRIPT_FOLDER,
@@ -21,9 +20,9 @@ async def async_setup(hass, config):
 
     sys.path.append(SCRIPT_FOLDER)
 
-    event_distributor = EventDistributor(hass=hass)
+    event_distributor = EventDistributor(hass=hass, debug=False)
 
-    script_handler = ScriptHandler(SCRIPT_FOLDER)
+    script_handler = ScriptHandler(SCRIPT_FOLDER, debug=False)
 
     def setup():
         script_handler.find_files(pattern=FILE_NAME_PATTERN)
