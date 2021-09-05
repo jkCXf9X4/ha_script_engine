@@ -22,3 +22,6 @@ class StateChangedEvent:
         if not isinstance(o, StateChangedEvent):
             return NotImplemented
         return self.event == self.event
+
+    def __str__(self) -> str:
+        return f"Id: {self.entity_id}, type: {self.event_type}, new_state: {self.new_state}, old_state: {self.old_state}"

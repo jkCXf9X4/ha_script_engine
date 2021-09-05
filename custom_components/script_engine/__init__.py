@@ -4,6 +4,9 @@ import logging
 import sys
 
 async def async_setup(hass, config):
+    """
+    Extension setup function called by hass during startup
+    """
     from custom_components.script_engine.script_handler.script_handler import ScriptHandler
     from custom_components.script_engine.event.event_distributor import EventDistributor
 

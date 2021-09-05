@@ -1,1 +1,1 @@
-""" Custom types used to get the conversion correct from HA in state decorator """
+""" Custom types used to get the conversion correct from hass in decorators """

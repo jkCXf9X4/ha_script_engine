@@ -27,23 +27,23 @@ class ScriptHandler:
         def init_script(path, file):
             script = ScriptInfo()
             script.path = os.path.join(path, file)
-            script.filenmae = file
+            script.filename = file
             script.module_name = file.split(".")[0]
             return script
 
         scripts: List[ScriptInfo] = [init_script(self.path, name) for name in os.listdir(self.path)]
-        self.scripts = [f for f in scripts if fnmatch.fnmatch(f.filenmae, pattern)]
+        self.scripts = [f for f in scripts if fnmatch.fnmatch(f.filename, pattern)]
 
-        not self.debug or self.logger.debug(f"Script files: {[i.filenmae for i in self.scripts]}")
+        not self.debug or self.logger.debug(f"Script files: {[i.filename for i in self.scripts]}")
 
     def extract_script_classes(self, pattern):
         def extract_classes(script: ScriptInfo):
             importlib.invalidate_caches()
             module = importlib.import_module(script.module_name)
-            members = {i[0]: i[1] for i in inspect.getmembers(module, inspect.isclass)}
+            members = {i[0]: i[1] for i in inspect.getmembers(module, inspect.isclass) if i[1].__module__ == module.__name__}
             script.class_info_objects = [ClassInfo(_class) for key, _class in members.items() if re.match(pattern, key) != None]
 
-            not self.debug or self.logger.debug(f"Extracted classes:  {[i.script_class_object for i in script.class_info_objects]}")
+            not self.debug or self.logger.debug(f"\nFile: {script.filename }, Extracted classes:  {[i.script_class_object for i in script.class_info_objects]}")
 
         _ = [extract_classes(i) for i in self.scripts]
 
@@ -51,7 +51,7 @@ class ScriptHandler:
         def instantiate_classes(scrip_class: ClassInfo):
             scrip_class.script_class = scrip_class.script_class_object(*arg, **kwarg)
 
-            not self.debug or self.logger.debug(f"Created classes:  {scrip_class.script_class}")
+            not self.debug or self.logger.debug(f"\nClass: {scrip_class.script_class_object.__name__} Created classes:  {scrip_class.script_class}")
 
         _ = [[instantiate_classes(j) for j in i.class_info_objects] for i in self.scripts]
 
@@ -74,7 +74,7 @@ class ScriptHandler:
         def instantiate_functions(scrip_class: ClassInfo):
             scrip_class.function_results = [func(*args, **kwargs) for func in scrip_class.script_function_objects]
 
-            not self.debug or self.logger.debug(f"Instantiate status: {scrip_class.function_results}")
+            not self.debug or self.logger.debug(f"\nClass: {scrip_class.script_class_object.__name__}, Instantiate status: {scrip_class.function_results}")
 
         _ = [[instantiate_functions(j) for j in i.class_info_objects] for i in self.scripts]
 

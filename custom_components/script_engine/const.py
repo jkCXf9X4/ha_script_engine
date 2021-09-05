@@ -1,4 +1,6 @@
 
+""" PUBLIC CONSTANTS """
+
 DOMAIN = "script_engine"
 
 CLASS_NAME_PATTERN = '_Script_*'

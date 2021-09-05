@@ -7,7 +7,7 @@ class ScriptTime(SimpleTime):
 
     def __init__(self, hours=0, minutes=0, seconds=0) -> None:
         """
-        Variable hours can be a timestring with format "12:00" to ensure that the conversion from home assistent is correct
+        Variable hours can be a timestring with format "12:00" to ensure that the conversion from home assistant is correct
         """
         if type(hours) == str:
             t = dt.datetime.strptime(hours, "%H:%M").time()

@@ -15,18 +15,24 @@ class IfState(State):
             bigger_than: Optional[Any] = "*",
             smaller_than: Optional[Any] = "*",
             custom_eval: Optional[Callable[[Any ,Any], bool]] = None,
+            custom_eval_condition: Optional[Any] = True,
             stay_valid: Optional[bool] = False,
             *args, **kwargs):
-        super().__init__(id, state=state, previous_state="*", bigger_than=bigger_than, smaller_than=smaller_than, custom_eval=custom_eval, *args, **kwargs)
+
+        super().__init__(id,
+            state=state,
+            previous_state="*",
+            bigger_than=bigger_than,
+            smaller_than=smaller_than,
+            custom_eval=custom_eval,
+            custom_eval_condition=custom_eval_condition,
+            stay_valid= stay_valid,
+            *args, **kwargs)
 
         self.decorator_type = "IfState"
         self.name = type(self).__name__
 
-        self.stay_valid = stay_valid
-
     def setup(self, *args, **kwargs):
-        self.new_state = None
-
         return super().setup(*args, **kwargs)
 
     def get_default_output(self, *args, **kwargs):  # overwrite base method
@@ -36,12 +42,5 @@ class IfState(State):
         return args, kwargs
 
     def default(self, *args, **kwargs):
-
-        def update():
-            self.new_state = StateExt.get_state(self.hass, self.id).state
-            self.valid = self.is_valid(self.new_state, old_state=None)
-
-        if not self.stay_valid or (self.stay_valid and not self.valid):
-            update()
-
+        self.new_state = self.hass.states.get(self.id)
         return super().default(*args, **kwargs)

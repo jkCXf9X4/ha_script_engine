@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
 
 class ScriptDateTime(datetime):
+    """
+    Use with sensor.date_time_iso from https://www.home-assistant.io/integrations/time_date/
+    """
 
     def __new__(cls, str):
         d = datetime.fromisoformat(str)

@@ -39,7 +39,7 @@ class EventDistributor(metaclass=Singleton):
     def _register_event_tracker(self):
 
         def pre_call(callback, event_data: StateChangedEvent):  # used to add event as a kwarg and not an arg
-            not self.debug or self.log.debug(f"Executing callback {event_data.entity_id}, callback{ callback}")
+            not self.debug or self.log.debug(f"Executing callback {event_data.entity_id}, callback {callback}")
             callback(event=event_data)
 
         @callback
@@ -58,7 +58,9 @@ class EventDistributor(metaclass=Singleton):
             self.id_table[entity_id].append(callback)
             not self.debug or self.log.debug(f"Added callback, {entity_id}: {callback}")
             return True
-        return False
+        else:
+            not self.debug or self.log.debug(f"Callback not added, already present")
+            return False
 
     def remove_callback(self, entity_id, callback):
         if entity_id in self.id_table and callback in self.id_table[entity_id]:

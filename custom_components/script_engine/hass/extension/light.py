@@ -1,6 +1,6 @@
 import logging
 
-from homeassistant.core import State
+from homeassistant.core import HomeAssistant, State
 
 from .service import ServiceExt
 from .state import StateExt
@@ -9,18 +9,24 @@ class LightExt:
 
     _logger = logging.getLogger(__name__)
 
-    @classmethod
-    def turn_on_light(cls, hass, id, data={}, debug=False):
-        ServiceExt.call_service(hass, "light", "turn_on", id, data, debug)
+    ON_STATE = "on"
+    OFF_STATE = "off"
+    UNKNOWN_STATE = ""
 
     @classmethod
-    def turn_off_light(cls, hass, id, data={}, debug=False):
-        ServiceExt.call_service(hass, "light", "turn_off", id, data, debug)
+    def turn_on(cls, hass : HomeAssistant, id, debug=False):
+        hass.services.call("light", "turn_on", target= {"entity_id" : id})
 
     @classmethod
-    def get_light_info(self, debug=False):
-        state = StateExt.get_state(self.hass, self.id, debug)
-        if state != None:
+    def turn_off(cls, hass: HomeAssistant, id, data={}, debug=False):
+        hass.services.call("light", "turn_off", target= {"entity_id" : id})
+
+    @classmethod
+    def get_std_attributes(cls, hass :HomeAssistant, id, debug=False):
+        state = hass.states.get(id)
+        if state == None:
+            raise Exception(f"Exception, {id} state not existing")
+        else:
             on_off = state.state
             attributes = ["brightness", "color_temp", "rgb_color", "rgbw_color", "rgbww_color"]
             data = {}
@@ -28,3 +34,4 @@ class LightExt:
                 if state.attributes.get(i, None) != None:
                     data[i] = state.attributes[i]
             return on_off, data
+        

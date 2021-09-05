@@ -1,9 +1,9 @@
 
-from custom_components.script_engine.decorator.decorator import Decorator
+from custom_components.script_engine.decorator.base_decorator import BaseDecorator
 
-class Debug(Decorator):
+class Debug(BaseDecorator):
     """
-    Sets the debug flag to the decorators after
+    Sets the debug flag to the decorators after in the chain
     """
 
     def __init__(self, *args, **kwargs):
