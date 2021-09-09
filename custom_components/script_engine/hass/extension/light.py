@@ -14,12 +14,14 @@ class LightExt:
     UNKNOWN_STATE = ""
 
     @classmethod
-    def turn_on(cls, hass : HomeAssistant, id, debug=False):
-        hass.services.call("light", "turn_on", target= {"entity_id" : id})
+    def turn_on(cls, hass : HomeAssistant, id, data={}, debug=False):
+        ServiceExt.call_service(hass,"light" , "turn_on", service_data=data, target= {"entity_id" : id}, debug=debug)
+        # hass.services.call("light", "turn_on", service_data=data, target= {"entity_id" : id})
 
     @classmethod
     def turn_off(cls, hass: HomeAssistant, id, data={}, debug=False):
-        hass.services.call("light", "turn_off", target= {"entity_id" : id})
+        ServiceExt.call_service(hass,"light" , "turn_off", service_data=data, target= {"entity_id" : id}, debug=debug)
+        # hass.services.call("light", "turn_off", service_data=data, target= {"entity_id" : id})
 
     @classmethod
     def get_std_attributes(cls, hass :HomeAssistant, id, debug=False):

@@ -11,6 +11,6 @@ class ServiceExt:
         return {["entity_id"]: id}
 
     @classmethod
-    def call_service_data(cls, hass: HomeAssistant, service, action, service_data=None, target=None, debug=False):
+    def call_service(cls, hass: HomeAssistant, service, action, service_data=None, target=None, debug=False):
         not debug or cls._logger.debug(f"Call service, {service}, {action}, {service_data}, {target}")
         hass.services.call(service, action, service_data=service_data, target=target)
