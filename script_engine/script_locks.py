@@ -22,8 +22,8 @@ class _Script_Locks(Engine):
     def lock(self, id):
         state = self.hass.states.get(id)
         if state != self.LOCKED:
-            # pass
-            self.hass.services.call("lock", "lock", target= {"entity_id" : id})
+            pass
+            # self.hass.services.call("lock", "lock", target= {"entity_id" : id})
 
     @Delay(minutes=2)
     @ToState(id=_Script_HomeStatus.home_status_id, state=_Script_HomeStatus.sleep)

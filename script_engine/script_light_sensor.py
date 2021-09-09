@@ -50,14 +50,16 @@ class _Script_LightSensorOutside(Engine):
         not self.debug or self.log.info(f"return False")
         return False
 
-    @ToState(id=light_sensor_id, custom_eval=custom)
-    @Proximity(minutes=30)
+    # @ToState(id=light_sensor_id, custom_eval=custom)
+    # @Proximity(minutes=30)
+    @ToState(id=light_sensor_id, bigger_than=400.0)
     def _script_light_outside(self, *args, **kwargs):
         self.log.info(f"Its light outside")
         self.hass.states.async_set(entity_id=self.light_outside_id, new_state=True)
 
-    @ToState(id=light_sensor_id, custom_eval=custom, custom_eval_condition=False)
-    @Proximity(minutes=30)
+    # @ToState(id=light_sensor_id, custom_eval=custom, custom_eval_condition=False)
+    # @Proximity(minutes=30)
+    @ToState(id=light_sensor_id, smaller_than=150.0)
     def _script_dark_outside(self, *args, **kwargs):
         self.log.info(f"Its dark outside")
         self.hass.states.async_set(entity_id=self.light_outside_id, new_state=False)
