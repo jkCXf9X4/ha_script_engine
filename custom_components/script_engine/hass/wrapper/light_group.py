@@ -26,9 +26,9 @@ class LightGroupWrap:
             self.lights = [LightWrap(self.hass, i, debug=self.debug) for i in self.light_ids]
             not self.debug or self.log.debug(f"Group lights { [str(i) for i in self.lights]}")
 
-    def turn_on(self):
+    def turn_on(self, data={}):
         if self.lights != None:
-            _ = [i.turn_on() for i in self.lights]
+            _ = [i.turn_on(data=data) for i in self.lights]
         else:
             not self.debug or self.log.debug(f"Group id {self.group_id}, turn_on fallthru, no action")
 
@@ -38,9 +38,9 @@ class LightGroupWrap:
         else:
             not self.debug or self.log.debug(f"Group id {self.group_id}, turn_off fallthru, no action")
 
-    def restore(self):
+    def restore(self, data={}):
         if self.lights != None:
-            _ = [i.restore() for i in self.lights]
+            _ = [i.restore(data=data) for i in self.lights]
         else:
             not self.debug or self.log.debug(f"Group id {self.group_id}, restore fallthru, no action")
 

@@ -25,20 +25,21 @@ class LightWrap:
                 not self.debug or self.log.debug(f"State: {self.state}, Data: {self.data}")
         LightExt.turn_off(self.hass, self.id, debug=self.debug)
 
-    def turn_on(self):
+    def turn_on(self, data={}):
         not self.debug or self.log.debug(f"Light {self.id}, turning on")
         state = StateExt.get_state(self.hass, self.id, debug=self.debug).state
         if state != LightExt.ON_STATE:
-            LightExt.turn_on(self.hass, self.id, debug=self.debug)
+            LightExt.turn_on(self.hass, self.id, data=data, debug=self.debug)
 
-    def restore(self):
+    def restore(self, data={}):
         if self.data != {}:
+            data = self.data.update(data)
             not self.debug or self.log.debug(f"Light {self.id}, restore, restoring state")
             not self.debug or self.log.debug(f"State: {self.state}, Data: {self.data}")
-            LightExt.turn_on(self.hass, self.id, data=self.data, debug=self.debug)
+            LightExt.turn_on(self.hass, self.id, data=data, debug=self.debug)
         else:
             not self.debug or self.log.debug(f"Light {self.id}, restore, missing data, only turning on")
-            LightExt.turn_on(self.hass, self.id, debug=self.debug)
+            LightExt.turn_on(self.hass, self.id, data=data, debug=self.debug)
 
     def __str__(self) -> str:
         return f"LightWrap_{self.id}_{self.state}_{self.data}"
