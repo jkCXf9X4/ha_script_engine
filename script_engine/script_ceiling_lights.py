@@ -1,4 +1,5 @@
-
+from custom_components.script_engine.type.script_time import ScriptTime
+import datetime
 from typing import List
 
 from custom_components.script_engine.engine import Engine
@@ -33,7 +34,11 @@ class _Script_CeilingLights(Engine):
     @ToState(id=_Script_LightSensorOutside.light_outside_id, state=False)
     def _script_turn_on_ceiling_lights(self, *args, **kwargs):
         self.log.info("Turn on ceiling lights")
-        self.light_group.restore()
+        data = {}
+        now = ScriptTime.now()
+        if ScriptTime.is_between(ScriptTime("03:00"), now, ScriptTime("09:00")):
+            data = {"transition": 1800}
+        self.light_group.restore(data)
 
     @ToState(id=group_exists_id, state=True)
     @ToState(id=_Script_HomeStatus.home_status_id, state=_Script_HomeStatus.awake)

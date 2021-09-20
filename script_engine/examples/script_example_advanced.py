@@ -27,16 +27,16 @@ class _Script_ExampleAdvanced(Engine):
 
     ### Example 2 ###
     ### Using debug and duality decorators
-    ### Duallity will fire even if a condition is false, make sure to catch the condition
-    @Debug()  # Observ brackets
-    @Duality()  # Observ brackets
+    ### Duality will fire even if a condition is false, make sure to catch the condition
+    @Debug()  # Observe brackets
+    @Duality()  # Observe brackets
     @ToState(id="input_boolean.is_home", state="on", debug=False)
     def _script_example_2(self, *args, **kwargs):
         condition = kwargs.get("condition")
         if condition:
-            LightExt.turn_on(self.hass, id="light.hunden_on_off", data={})
+            LightExt.turn_on(self.hass, id="light.dining_table", data={})
         else:
-            LightExt.turn_off(self.hass, id="light.hunden_on_off", data={})
+            LightExt.turn_off(self.hass, id="light.dining_table", data={})
 
     ### Example 3 ###
     ### Using a function as a state comparison
@@ -56,7 +56,7 @@ class _Script_ExampleAdvanced(Engine):
 
     ### Example 4 ###
     ### Using a custom evaluation function
-    ### Will turn on the lamp aprox one day in five according to a random generator
+    ### Will turn on the lamp approx one day in five according to a random generator
     def random(new_state: str, old_state: str):
         i = random.random()
         if new_state == "15:00" and i > 0.8:
@@ -66,4 +66,4 @@ class _Script_ExampleAdvanced(Engine):
 
     @ToState(id="sensor.time", custom_eval=random)
     def _script_example_2(self, *args, **kwargs):
-        LightExt.turn_on(self.hass, id="light.hunden_on_off", data={})
+        LightExt.turn_on(self.hass, id="light.kids_room", data={})

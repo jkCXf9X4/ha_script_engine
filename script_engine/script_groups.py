@@ -5,9 +5,6 @@ Decalaration of groups
 Not used atm, using groups in hass(yaml)
 """
 
-
-
-
 from typing import List
 
 from custom_components.script_engine.engine import Engine

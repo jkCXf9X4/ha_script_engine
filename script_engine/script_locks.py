@@ -17,21 +17,20 @@ class _Script_Locks(Engine):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.locks = ["lock.back", "lock.main", "lock.carport"]
+        self.locks = ["lock.back", "lock.main"]
 
     def lock(self, id):
         state = self.hass.states.get(id)
         if state != self.LOCKED:
-            pass
-            # self.hass.services.call("lock", "lock", target= {"entity_id" : id})
+            self.hass.services.call("lock", "lock", target= {"entity_id" : id})
 
-    @Delay(minutes=2)
+    @Delay(minutes=5)
     @ToState(id=_Script_HomeStatus.home_status_id, state=_Script_HomeStatus.sleep)
     def _script_lock_doors(self, *args, **kwargs):
         self.log.info("Lock doors")
         _ = [self.lock(i)  for i in self.locks]
 
-    @Delay(minutes=2)
+    @Delay(minutes=5)
     @ToState(id=_Script_HomeStatus.home_status_id, state=_Script_HomeStatus.away)
     def _script_lock_doors_2(self, *args, **kwargs):
         self.log.info("Lock doors")
