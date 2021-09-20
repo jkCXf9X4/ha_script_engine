@@ -59,6 +59,25 @@ class TestScriptTime(unittest.TestCase):
 
         self.assertEqual(actual, required)
 
+    def test_in_between_1(self):
+        result = ScriptTime.is_between(ScriptTime("03:00"), ScriptTime("07:00"), ScriptTime("09:00"))
+
+        self.assertEqual(True, result)
+
+    def test_in_between_2(self):
+        result = ScriptTime.is_between(ScriptTime("03:00"), ScriptTime("21:00"), ScriptTime("09:00"))
+
+        self.assertEqual(False, result)
+
+    def test_now_1(self):
+        actual = ScriptTime.now()
+        print(actual)
+
+        actual_type = type(actual)
+
+        required = type(ScriptTime())
+
+        self.assertEqual(actual_type, required)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,4 +1,6 @@
 
+
+# not used?
 class StringInit:
     def __init__(self, item):
         self.item = item

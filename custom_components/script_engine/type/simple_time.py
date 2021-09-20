@@ -34,6 +34,23 @@ class SimpleTime:
     def to_timedelta(self) -> dt.timedelta:
         return dt.timedelta(seconds=self.total_seconds)
 
+    @classmethod
+    def now(cls):
+        now = dt.datetime.now()
+        return cls(hours=now.hour, minutes=now.minute, seconds=now.second)
+
+    @staticmethod
+    def is_between(a, b, c):
+        """ 
+        Check if a <= b <= c is valid
+        """
+        if a >= c:
+            return ( b >= a or b <= c)
+        elif c >= a:
+            return a <= b <= c
+        else:
+            return False
+
     @property
     def total_seconds(self):
         return self._total_seconds
