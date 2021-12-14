@@ -131,6 +131,9 @@ dmypy.json
 # custom
 experimentation/
 homeassistant/
+homeassistant.rar
 upload_code.ps1
 .vscode/
 .vscode
+*.rar
+
