@@ -9,7 +9,7 @@ A variant of home assistant "python script" but with a more free for all approac
 
 ## Simple example use:
 
-A minimum setup script, same as below - [code](script_engine/examples/script_example_simple.py)
+A simple example script, 
 
 ```
 from custom_components.script_engine.engine import Engine
@@ -17,19 +17,15 @@ from custom_components.script_engine.decorator import ToState
 
 class _Script_ExampleSimple(Engine):
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-
     @ToState(id="group.family", state="home")
     def _script_is_home(self, *args, **kwargs):
-        self.log.info("Someone is home")
-        hass.services.call("light", "turn_on", target={"entity_id" = "light.living_room"})
+        self.hass.services.call( "light", "turn_on", target = { "entity_id" = "light.living_room" } )
 
     @ToState(id="group.family", state="not_home")
     def _script_is_away(self, *args, **kwargs):
-        self.log.info("No one is home")
-        hass.services.call("light", "turn_off", target={"entity_id" = "light.living_room"})
+        self.hass.services.call( "light", "turn_off", target = { "entity_id" = "light.living_room"} )
 ```
+[code](script_engine/examples/script_example_simple.py)
 
 Different decorators can be added for different functions
 Decorators can be stacked for an and relationship between the conditions
@@ -46,7 +42,7 @@ def _script_play_1(self, *args, **kwargs):
 A few more advanced uses - [code](script_engine/examples/script_example_advanced.py)
 
 
-See [docs](docs/script_engine/decorators/index.md) for more info regarding decorators, needs more work atm
+See [docs](docs/script_engine/decorators/index.md) for more info regarding decorators, doc needs more work atm
 
 A few simple wrappers for hass state and service manipulation use are also present for some cleaner use if needed
 
@@ -68,8 +64,3 @@ FILE_NAME_PATTERN = 'script_*.py'
 CLASS_NAME_PATTERN = '_Script_*'
 FUNCTION_NAME_PATTERN = '_script_*'
 ```
-
-
-Todo: Fork off my own configuration from master
- 
-

@@ -14,11 +14,9 @@ class _Script_ExampleAdvanced(Engine):
 
     id = f"{DOMAIN}.playground_id"
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-
     ### Example 1 ###
     ### Stacking conditions 
+    ### all three must be fullfilled for function to be called
     @ToState(id="lock.main", state="unlocked")
     @ToState(id="sensor.time", bigger_than=ScriptTime("16:00"))
     @IfState(id="group.family", state="home")
@@ -27,7 +25,7 @@ class _Script_ExampleAdvanced(Engine):
 
     ### Example 2 ###
     ### Using debug and duality decorators
-    ### Duality will fire even if a condition is false, make sure to catch the condition
+    ### Duality will fire even if a condition is false, make sure to catch the kwarg "condition"
     @Debug()  # Observe brackets
     @Duality()  # Observe brackets
     @ToState(id="input_boolean.is_home", state="on", debug=False)
@@ -56,7 +54,7 @@ class _Script_ExampleAdvanced(Engine):
 
     ### Example 4 ###
     ### Using a custom evaluation function
-    ### Will turn on the lamp approx one day in five according to a random generator
+    ### Will turn on the lamp approx one day in five at 15:00 according to a random generator
     def random(new_state: str, old_state: str):
         i = random.random()
         if new_state == "15:00" and i > 0.8:
