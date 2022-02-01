@@ -32,7 +32,8 @@ async def async_setup(hass, config):
         script_handler.extract_script_classes(pattern=CLASS_NAME_PATTERN)
         script_handler.instantiate_script_classes(hass=hass, domain=DOMAIN)
         script_handler.extract_script_functions(pattern=FUNCTION_NAME_PATTERN)
-        script_handler.instantiate_script_functions(hass=hass, setup=True)
+        script_handler.instantiate_script_functions(setup_handler=True, hass=hass)
+        script_handler.instantiate_script_functions(setup=True)
 
     def teardown():
         script_handler.instantiate_script_functions(teardown=True)
