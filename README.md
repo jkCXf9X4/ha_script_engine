@@ -5,7 +5,7 @@ Create python scripts that use event callbacks from home assistant to trigger sc
 
 A variant of home assistant "python script" but with a more free for all approach
 
-[Documentation](docs/script_engine/index.md) 
+[Documentation](docs/script_engine/)  (docs is a work in not so much progress)
 
 ## Simple example use:
 
@@ -25,7 +25,7 @@ class _Script_ExampleSimple(Engine):
     def _script_is_away(self, *args, **kwargs):
         self.hass.services.call( "light", "turn_off", target = { "entity_id" = "light.living_room"} )
 ```
-[code](script_engine/examples/script_example_simple.py)
+[code](script_engine/script_example_simple.py)
 
 Different decorators can be added for different functions
 Decorators can be stacked for an and relationship between the conditions
@@ -39,10 +39,10 @@ def _script_play_1(self, *args, **kwargs):
     hass.services.call("light", "turn_on", target={"entity_id" = "light.living_room"})
 ```
 
-A few more advanced uses - [code](script_engine/examples/script_example_advanced.py)
+A few more advanced uses - [code](script_engine/script_example_advanced.py)
 
 
-See [docs](docs/script_engine/decorators/index.md) for more info regarding decorators, doc needs more work atm
+See [docs](docs/script_engine/decorator/) for more info regarding decorators, doc needs more work atm
 
 A few simple wrappers for hass state and service manipulation use are also present for some cleaner use if needed
 
