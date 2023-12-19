@@ -29,7 +29,6 @@ class State(ValidDecorator):
             bigger_than: Optional[Any] = "*",
             smaller_than: Optional[Any] = "*",
             custom_eval: Optional[Callable[[Any, State ,State], bool]] = None,
-            custom_eval_condition: Optional[Any] = True,
             persistent: Optional[bool] = False,
             init_valid_state: Optional[bool] = False,
             *args, **kwargs):
@@ -41,7 +40,6 @@ class State(ValidDecorator):
         self.required_bigger_than = bigger_than
         self.required_smaller_than = smaller_than
         self.custom_eval = custom_eval
-        self.custom_eval_condition = custom_eval_condition
 
         self.non_value_keys = [None, "*", "**"]
 
@@ -122,8 +120,8 @@ class State(ValidDecorator):
             conditions.append(check(new_state_str, operator.le, required_smaller_than))
 
         if self.custom_eval != None:
-            custom_evaluation = self.custom_eval(self.call_class_self, new_state, old_state) == self.custom_eval_condition
-            conditions.append(custom_evaluation)
+            result = self.custom_eval(self.function.call_class, new_state, old_state)
+            conditions.append(result)
 
         not self.debug or self.log.debug(f"Conditions {conditions}")
 

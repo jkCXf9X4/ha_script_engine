@@ -18,7 +18,6 @@ class ToState(State):
             bigger_than: Optional[Any] = "*",
             smaller_than: Optional[Any] = "*",
             custom_eval: Optional[Callable[[Any ,Any], bool]] = None,
-            custom_eval_condition: Optional[Any] = True,
             persistent: Optional[bool] = False,
             init_valid_state: Optional[bool] = False,
             *args, **kwargs):
@@ -30,7 +29,6 @@ class ToState(State):
             bigger_than=bigger_than,
             smaller_than=smaller_than,
             custom_eval=custom_eval,
-            custom_eval_condition=custom_eval_condition,
             persistent=persistent,
             init_valid_state=init_valid_state
             *args, **kwargs)

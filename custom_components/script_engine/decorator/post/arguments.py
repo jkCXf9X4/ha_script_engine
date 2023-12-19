@@ -14,7 +14,7 @@ class Arguments(Decorator):
     def __init__(self, ids: List[str], key: str, return_name: str = "attributes", *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.decorator_type = DecoratorType.POST
+        self.type = DecoratorType.POST
 
         self.return_name = return_name
         self.ids = ids

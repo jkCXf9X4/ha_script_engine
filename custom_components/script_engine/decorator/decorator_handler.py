@@ -68,7 +68,10 @@ class DecoratorHandler:
         kwargs["result"] = [True] * len(self.decorators)
 
         if [i for i in self.decorators if i.type == DecoratorType.ABC] != []:
-            raise Exception("Decorator is ABC")
+            o = ""
+            for i in  self.decorators:
+                o += f"{i} - {i.type}\n"
+            raise Exception("Decorator is ABC\n{o}\n")
 
         for type_ in order:
             for decorator in self.decorators:

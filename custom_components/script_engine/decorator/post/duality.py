@@ -10,7 +10,7 @@ class Duality(Decorator):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.decorator_type = DecoratorType.POST
+        self.type = DecoratorType.POST
 
         self.condition = None
         self.previous_condition = None
