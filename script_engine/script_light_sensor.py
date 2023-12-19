@@ -57,7 +57,7 @@ class _Script_LightSensorOutside(Engine):
         self.log.info(f"Its light outside")
         self.hass.states.async_set(entity_id=self.light_outside_id, new_state=True)
 
-    # @ToState(id=light_sensor_id, custom_eval=custom, custom_eval_condition=False)
+    # @ToState(id=light_sensor_id, custom_eval=custom)
     # @Proximity(minutes=2)
     @ToState(id=light_sensor_id, smaller_than=150.0)
     def _script_dark_outside(self, *args, **kwargs):
