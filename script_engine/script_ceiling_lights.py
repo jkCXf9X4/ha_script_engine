@@ -11,10 +11,14 @@ from custom_components.script_engine.const import DOMAIN
 from script_engine.script_time import _Script_HomeStatus
 from script_engine.script_light_sensor import _Script_LightSensorOutside
 
+from homeassistant.core import State
+
 class _Script_CeilingLights(Engine):
 
     group_id = "group.ceiling_lamps"
     group_exists_id = f"{DOMAIN}.ceiling_lights_exists"
+    
+    light_bedroom_id = "light.dimmer_sovrum_light"
 
     # The light group is not existing from the start and any use must wait until it exists
     @Delay(minutes=2)
@@ -44,4 +48,31 @@ class _Script_CeilingLights(Engine):
         self.hass.services.call("homeassistant", "turn_off", target= {"entity_id" : self.group_id})
 
 
+    def custom_eval_bedroom_plug(self, new:  State, old : State):
+        brightness = new.attributes.get("brightness", 0)
+        if brightness == None:
+            # When turning off the brightness wont exist
+            return False
+    
+        if brightness > 100:
+            return True
+        else:
+            return False
+
+    def inverted_custom_eval_bedroom_plug(self, new, old):
+        return not self.custom_eval_bedroom_plug(new, old)      
+
+    @Delay(minutes=2)
+    @Debug()
+    @ToState(id=light_bedroom_id, custom_eval=custom_eval_bedroom_plug )
+    def _script_turn_on_bedroom_plug(self, *args, **kwargs):
+        self.log.info("_script_turn_on_bedroom_plug, on")
+        self.hass.services.call("homeassistant", "turn_on", target= {"entity_id" : "light.p6"})
+        
+    @Delay(minutes=2)
+    @Debug()
+    @ToState(id=light_bedroom_id, custom_eval=inverted_custom_eval_bedroom_plug)
+    def _script_turn_off_bedroom_plug(self, *args, **kwargs):
+        self.log.info("_script_turn_on_bedroom_plug, off")
+        self.hass.services.call("homeassistant", "turn_off", target= {"entity_id" : "light.p6"})
 

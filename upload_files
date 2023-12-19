@@ -1,0 +1,18 @@
+
+#!/bin/bash
+
+# Upload changes to home assistant
+
+hass=/mnt/chromeos/SMB/3b01583b1d7d476a3e244909c2b887e9ff66d4b0f13180066521e4660c67f90b
+
+local=~/src/hass_script_engine
+
+# rm -rfd $hass/custom_components/script_engine
+cp -R $local/custom_components/script_engine $hass/custom_components/script_engine 
+
+
+# rm -rfd $hass/script_engine
+cp -R $local/script_engine $hass/script_engine
+
+# ssh hassio@192.168.1.113
+# ha core restart
