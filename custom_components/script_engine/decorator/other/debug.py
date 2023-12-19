@@ -10,7 +10,7 @@ class Debug(Decorator):
     def __init__(self, *args, **kwargs):
         super().__init__()  # *args, **kwargs)
 
-        self.decorator_type = DecoratorType.OTHER
+        self.type = DecoratorType.OTHER
 
     def setup(self, *args, **kwargs):
         kwargs["debug"] = True

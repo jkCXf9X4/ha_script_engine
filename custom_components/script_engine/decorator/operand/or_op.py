@@ -8,7 +8,7 @@ class OrOp(Decorator):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.decorator_type = DecoratorType.OPERAND
+        self.type = DecoratorType.OPERAND
 
     def __str__(self) -> str:
         return f"{self.name}:{self.type}:wrap's {self.function.get_name()}"
